@@ -8,6 +8,9 @@ public class BallController : MonoBehaviour
     public float fastFallSpeed = 20f;
     private Rigidbody _rigid;
 
+    public float jumpStrenght;
+   // public Transform playerCamera; public float mouseSensitivity;
+
     private void Start()
     {
         _rigid = gameObject.GetComponent<Rigidbody>();
@@ -33,14 +36,18 @@ public class BallController : MonoBehaviour
             _rigid.AddForce(Vector3.back * speed);
         }
 
-        if (Input.GetKey("space"))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            _rigid.AddForce(Vector3.up * jumpSpeed);
+            _rigid.velocity = Vector2.up * jumpStrenght;
+            // _rigid.AddForce(Vector3.up * jumpSpeed);
         }
         else if (Input.GetKey("left ctrl"))
         {
             _rigid.AddForce(Vector3.down * fastFallSpeed);
         }
+         // transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * mouseSensitivity, 0);
+
+       // transform.position = transform.position + Camera.main.transform.forward * distance * Time.deltaTime;
     }
     
 }
