@@ -359,6 +359,8 @@
 "Assets/Scripts/BallShockwave.cs"
 "Assets/Scripts/CameraFollow.cs"
 "Assets/Scripts/CameraRotation.cs"
+"Assets/Scripts/EnemyScript.cs"
+"Assets/Scripts/HealthbarScript.cs"
 "Assets/Scripts/StatsObserver.cs"
 "Assets/TextMesh Pro/Examples & Extras/Scripts/Benchmark01.cs"
 "Assets/TextMesh Pro/Examples & Extras/Scripts/Benchmark01_UGUI.cs"
