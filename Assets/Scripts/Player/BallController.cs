@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BallController : MonoBehaviour
@@ -15,27 +16,13 @@ public class BallController : MonoBehaviour
     private void Start()
     {
         _rigid = gameObject.GetComponent<Rigidbody>();
+        _rigid.maxAngularVelocity = Mathf.Infinity;
     }
 
     void Update()
     {
-        if (Input.GetAxis("Horizontal") > 0)
-        {
-            _rigid.AddForce(cameraTransform.right * speed);
-        }
-        else if (Input.GetAxis("Horizontal") < 0)
-        {
-            _rigid.AddForce(-cameraTransform.right * speed);
-        }
-
-        if (Input.GetAxis("Vertical") > 0)
-        {
-            _rigid.AddForce(cameraTransform.forward * speed);
-        }
-        else if (Input.GetAxis("Vertical") < 0)
-        {
-            _rigid.AddForce(-cameraTransform.forward * speed);
-        }
+        _rigid.AddTorque(-cameraTransform.forward * (speed * Input.GetAxis("Horizontal")));
+        _rigid.AddTorque(cameraTransform.right * (speed * Input.GetAxis("Vertical")));
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -53,18 +40,30 @@ public class BallController : MonoBehaviour
             _rigid.angularVelocity = Vector3.zero;
         }
     }
-
+    //Collisions Handling, need refactoring???
     void OnCollisionEnter(Collision collision)
     {
+        Debug.Log(collision.impulse.magnitude);
         if (collision.gameObject.tag == "Surface" && isFalling)
         {
             GameObject blastwave = Instantiate(blastwavePrefab, _rigid.transform.position,  Quaternion.identity);
             BlastWave.handleBlastwave(blastwave, 50);
             isFalling = false;
         }
+        
+        else if (collision.gameObject.tag == "JumpPad")
+        {
+            _rigid.velocity = Vector3.left / 2;
+            _rigid.velocity = Vector3.right / 2;
+            _rigid.velocity = Vector3.forward / 2;
+            _rigid.velocity = Vector3.back / 2;
+            _rigid.velocity = cameraTransform.up * fastFallSpeed; //TODO rebalance it a bit
+        }
+        
         else if (isFalling)
         {
             isFalling = false;
         }
     }
+    
 }

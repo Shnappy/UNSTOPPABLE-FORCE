@@ -9,9 +9,10 @@ public class StatsObserver : MonoBehaviour
     private float velocity;
     private float combo;
 
+    //TODO revise if has to be removed
     void Update()
     {
-        getVelocity(); //FIXME Severe performance issues
+        getVelocity(); //FIXME Severe performance issues; bro do a fixed update!!!
         velocityText.text = "Speed: " + velocity.ToString("0.00");
     }
     
