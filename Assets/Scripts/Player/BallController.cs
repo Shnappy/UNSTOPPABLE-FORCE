@@ -4,9 +4,10 @@ using UnityEngine;
 public class BallController : MonoBehaviour
 {
     public Transform cameraTransform;
-    public float speed = 5f;
-    public float jumpStrenght = 10f;
+    public float speed = 8f;
+    public float jumpStrenght = 500f;
     public float fastFallSpeed = 20f;
+    public int health = 100;
 
     private Rigidbody _rigid;
     private bool isFalling = false;
@@ -16,17 +17,27 @@ public class BallController : MonoBehaviour
     private void Start()
     {
         _rigid = gameObject.GetComponent<Rigidbody>();
-        _rigid.maxAngularVelocity = Mathf.Infinity;
+        //_rigid.maxAngularVelocity = Mathf.Infinity;
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        _rigid.AddTorque(-cameraTransform.forward * (speed * Input.GetAxis("Horizontal")));
-        _rigid.AddTorque(cameraTransform.right * (speed * Input.GetAxis("Vertical")));
+        var cameraForward = cameraTransform.forward;
+        _rigid.AddForce(new Vector3(cameraForward.x, 0.0f, cameraForward.z) *
+                        (speed * Input.GetAxis("Vertical")));
+        var cameraRight = cameraTransform.right;
+        _rigid.AddForce(new Vector3(cameraRight.x, 0.0f, cameraRight.z) *
+                        (speed * Input.GetAxis("Horizontal")));
+        //_rigid.AddTorque(-cameraTransform.forward * (speed * Input.GetAxis("Horizontal"))); //for circular motion
+        //_rigid.AddTorque(cameraTransform.right * (speed * Input.GetAxis("Vertical"))); //for circular motion
+    }
 
+    private void Update()
+    {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            _rigid.velocity = cameraTransform.up * jumpStrenght;
+            _rigid.AddForce(new Vector3(0.0f, cameraTransform.up.y, 0.0f) * jumpStrenght);
+            //_rigid.velocity = cameraTransform.up * jumpStrenght;
         }
         else if (Input.GetKeyDown(KeyCode.LeftControl))
         {
@@ -50,16 +61,7 @@ public class BallController : MonoBehaviour
             BlastWave.handleBlastwave(blastwave, 50);
             isFalling = false;
         }
-        
-        else if (collision.gameObject.tag == "JumpPad")
-        {
-            _rigid.velocity = Vector3.left / 2;
-            _rigid.velocity = Vector3.right / 2;
-            _rigid.velocity = Vector3.forward / 2;
-            _rigid.velocity = Vector3.back / 2;
-            _rigid.velocity = cameraTransform.up * fastFallSpeed; //TODO rebalance it a bit
-        }
-        
+
         else if (isFalling)
         {
             isFalling = false;

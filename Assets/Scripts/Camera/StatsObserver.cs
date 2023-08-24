@@ -18,7 +18,7 @@ public class StatsObserver : MonoBehaviour
     
     private void getVelocity()
     {
-        velocity = player.GetComponent<Rigidbody>().velocity.magnitude;
+        //velocity = player.GetComponent<Rigidbody>().velocity.magnitude;
     }
     
 }

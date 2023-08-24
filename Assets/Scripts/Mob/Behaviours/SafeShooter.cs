@@ -37,9 +37,7 @@ public class SafeShooter : Behaviour
             else
             {
                 // Continue chasing the player
-                Vector3 direction = (player.position - transform.position).normalized;
-                Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
+                lookAtPlayer();
                 transform.Translate(0, 0, movementSpeed * Time.deltaTime);
             }
         }
@@ -73,6 +71,7 @@ public class SafeShooter : Behaviour
         // Shoot if in range
         if (isReadyToShoot)
         {
+            lookAtPlayer();
             if (!isFiringProjectile)
             {
                 StartCoroutine(handleShooting());
@@ -101,7 +100,7 @@ public class SafeShooter : Behaviour
     {
         // Instantiate a new bullet object
         GameObject bullet = Instantiate(bulletPrefab, barrelObject.transform.position, barrelObject.transform.rotation);
-
+        bullet.tag = "enemyProjectile"; //TODO revise the projectile collision, currently detected by the player
         // Get the rigidbody component of the bullet
         Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
 
@@ -109,7 +108,7 @@ public class SafeShooter : Behaviour
         bulletRigidbody.velocity = transform.forward * bulletSpeed;
 
         // Set the lifetime of the bullet
-        //Destroy(bullet, bulletLifetime);
+        Destroy(bullet, projectileLifetime);
 
         // Perform a raycast to check for collisions along the bullet's path
         //RaycastHit hit;
@@ -122,5 +121,25 @@ public class SafeShooter : Behaviour
         //        // You can access the hit object using hit.collider.gameObject
         //    }
         //}
+    }
+    private void lookAtPlayer()
+    {
+        Vector3 direction = (player.position - transform.position).normalized;
+        
+       //Quaternion bodyRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+       //transform.rotation = Quaternion.Slerp(transform.rotation, bodyRotation, Time.deltaTime * rotationSpeed);
+       //
+       //direction = (player.position - transform.position).normalized;
+       //
+       //Quaternion headRotation = Quaternion.LookRotation(new Vector3(direction.x, direction.y, direction.z));
+       //head.rotation = Quaternion.Slerp(head.rotation, headRotation, Time.deltaTime * rotationSpeed);
+        
+        //Vector3 weaponDirection = (player.position - weapon.position).normalized;
+        //
+        //Quaternion weaponRotation = Quaternion.LookRotation(new Vector3(weaponDirection.x, weaponDirection.y, weaponDirection.z));
+        //weapon.LookAt(player);
+        
+        head.LookAt(player);
+
     }
 }

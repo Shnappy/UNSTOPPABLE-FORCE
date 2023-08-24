@@ -8,7 +8,8 @@ public class Breakable : MonoBehaviour
     [SerializeField] private float _breakForce = 2;
     [SerializeField] private float _collsionMultiplier = 100;
     [SerializeField] private bool _broken;
-    
+
+    public float destructionTime = 5.0f;
     public void breakWithPhysics(Collision collision)
     {
         if (_broken) return;
@@ -30,5 +31,6 @@ public class Breakable : MonoBehaviour
         }
 
         Destroy(gameObject);
+        Destroy(replacement, destructionTime);
     }
 }

@@ -19,9 +19,9 @@ public class MobStats : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        currentHealth -= 1;
-        
-        if(currentHealth == 0)
+        currentHealth -= collision.impulse.magnitude;
+
+        if(currentHealth <= 0)
         {
             Breakable breakable = GetComponent<Breakable>();
             breakable.breakObject(collision);
